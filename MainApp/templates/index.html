@@ -1,0 +1,103 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>InstaFeast</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+</head>
+
+<body>
+
+    <div class="container-fluid">
+        <div class="row" style="margin-top: 5%">
+            <h1 style="text-align: center">InstaFeast</h1>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <form method="post" action ="#" >
+            {% csrf_token %}
+            <div class="row" style="margin-top: 5%">
+                <div class="col-md-6 col-md-offset-2">
+                    <input id="pac-input" class="form-control" type="text" placeholder="Where do you want to eat?">
+                    <input type="hidden" id="placeName" name="placeName">
+                    <input type="hidden" id="placeLat" name="placeLat">
+                    <input type="hidden" id="placeLng" name="placeLng">
+                </div>
+                <div class="col-md-2">
+                    <input class="btn btn-primary btn-block" type="submit" value="SEARCH">
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="container-fluid" style="margin-top: 3%">
+        <div class="row">
+            {% if not urls and not first %}
+            <div class="col-md-6 col-md-offset-3" style="margin-bottom: 20px">
+                <div class="label label-warning center-block" style="text-align: center; padding: 15px 0;">Sorry, no matches found.</div>
+            </div>
+            {% else %}
+            {% if name %}
+            <div class="col-md-6 col-md-offset-3" style="margin-bottom: 20px">
+                <div class="label label-success center-block" style="text-align: center; padding: 15px 0;">Showing images from {{name}}.</div>
+            </div>
+            {% endif %}
+        </div>
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <div class="container-fluid">
+                    <div class="row">
+                        {% for url in urls %}
+                        {%for like in likes %}
+                        {%if forloop.counter == forloop.parentloop.counter %}
+                        <div class="col-md-4">
+                            <div class="image" style="background: url('{{url}}') no-repeat center center; background-size: cover;"></div>
+                            <div style="margin-top: 10px; text-align: center;"> {{ like }} <span class="glyphicon glyphicon-heart"></span></div>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAoB3QW2_aX2H-kXDUNTcy0MTj6C7kn1ic&libraries=places"></script>
+<script>
+    function initialize() {
+        var input = document.getElementById('pac-input');
+        var options = {
+            types: ['establishment'],
+            componentRestrictions: {country: "sg"}
+        }
+        var autocomplete = new google.maps.places.Autocomplete(input, options);
+        
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+            var place = autocomplete.getPlace();
+            document.getElementById('placeName').value = place.name;
+            document.getElementById('placeLat').value = place.geometry.location.lat();
+            document.getElementById('placeLng').value = place.geometry.location.lng();
+        });
+    }
+    google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+
+</html>
