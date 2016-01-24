@@ -31,7 +31,7 @@ def Google_to_FB_to_Insta(name, lat, lng):
 	fb_places_names = []
 	fb_places_id = []
 
-	termsCheck = ['breakfast', 'brunch', 'lunch', 'dinner', 'food', 'dessert', 'delicious', 'tasty', 'yum']
+	termsCheck = ['breakfast', 'brunch', 'lunch', 'dinner', 'food', 'dessert', 'delicious', 'tasty', 'yum', 'drink', 'hungry']
 	insta_pic_urls = []
 	insta_pic_likes = []
 
@@ -59,10 +59,10 @@ def Google_to_FB_to_Insta(name, lat, lng):
 					insta_parsed = json.loads(json.dumps(insta_resp.json()))
 
 					if len(insta_parsed['data']) != 0:
-						insta_place_id = insta_parsed['data'][0]['id']
-						print(insta_parsed['data'][0]['name'] + ", " + insta_place_id)
+						insta_location = insta_parsed['data'][0]['id']
+						print(insta_parsed['data'][0]['name'] + ", " + insta_location)
 
-						insta_resp = requests.get('https://api.instagram.com/v1/locations/' + insta_place_id + '/media/recent?access_token=' + insta_access)
+						insta_resp = requests.get('https://api.instagram.com/v1/locations/' + insta_location + '/media/recent?access_token=' + insta_access)
 						
 						if insta_resp.status_code != 200:
 							print('GET Instagram API {}'.format(insta_resp.status_code))	# Return empty list and display 'No Matches' label.
@@ -80,7 +80,7 @@ def Google_to_FB_to_Insta(name, lat, lng):
 										if insta_parsed['data'][y]['caption'] != None:
 											insta_caption = insta_parsed['data'][y]['caption']['text'].lower()
 											if any(term in insta_caption for term in termsCheck):
-												face_response_url = "https://apicloud-facerect.p.mashape.com/process-url.json?url="+urllib.parse.quote_plus(insta_parsed['data'][y]['images']['standard_resolution']['url'])
+												face_response_url = "https://apicloud-facerect.p.mashape.com/process-url.json?url=" + urllib.quote_plus(insta_parsed['data'][y]['images']['standard_resolution']['url'])
 												face_response_headers = {'X-Mashape-Key': mashape_access, 'Accept': 'application/json'}
 												face_response = requests.get(face_response_url, headers=face_response_headers)
 												face_response_parsed = json.loads(json.dumps(face_response.json()))
