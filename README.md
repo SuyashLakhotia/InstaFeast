@@ -12,8 +12,9 @@ InstaFeast allows you to select a location using the Google Maps API, which is t
 1. [Suyash Lakhotia](https://github.com/SuyashLakhotia)
 2. [Nikhil Venkatesh](https://github.com/nikv96)
 
-<br><br>
-*NOTE:* A file called `OAuthKeys.py` must be present inside the *[MainApp](/MainApp/)* directory with the following format for InstaFeast to work properly:
+### Running *InstaFeast*:
+1. Run `pip install -r requirements.txt` to install the Python dependencies.
+2. Create a file called `OAuthKeys.py` inside the *[MainApp](/MainApp/)* directory with the following format:
 ```
 facebookAccess = <Facebook Graph API Access Token>
 instagramAccess = <Instagram API Access Token>
